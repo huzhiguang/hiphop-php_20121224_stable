@@ -18,7 +18,7 @@ install way as follow:
 #config gcc and boost environment:
  vi ~./bashrc
     
-    \#BOOST environment
+    #BOOST environment
     BOOST_INCLUDE=/export/files/boost-1.50/include/
     BOOST_LIB=/export/files/boost-1.50/lib
     export BOOST_INCLUDE BOOST_LIB
