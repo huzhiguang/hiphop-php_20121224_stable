@@ -28,7 +28,7 @@ install way as follow:
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/export/huzhiguang/files/libmemcached-1.0.10/lib
     export PATH=$BOOST_INCLUDE:$BOOST_LIB:$PATH
     
-    \#gcc environment
+    #gcc environment
     export PATH=/export/files/gcc-4.6.3/bin:$PATH
     export CMAKE_PREFIX_PATH=/export/dev_hhvm/usr/
     export HPHP_HOME=/export/dev_hhvm/hiphop-php_20121224_stable
