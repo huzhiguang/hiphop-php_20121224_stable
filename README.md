@@ -1,3 +1,89 @@
+We develop hiphop stable(version 1.0 20121224),this version have extension:
+Ice,mssql,mongodb,xcache,but redis don't add this version.
+
+install way as follow:
+
+#support system:
+    centos 6.2 +
+
+#Initialize the environment:
+    sudo yum install git svn cpp make autoconf automake libtool patch memcached gcc-c++ cmake wget boost-devel mysql-devel pcre-devel gd-devel libxml2-devel expat-devel libicu-devel bzip2-devel oniguruma-devel openldap-devel readline-devel libc-client-devel libcap-devel binutils-devel pam-devel elfutils-libelf-devel
+
+#support environment:
+    gcc 4.6.3+ 
+    boost 1.5.0
+
+    you can install gcc 4.6.3 and boost 1.5.0
+
+#config gcc and boost environment:
+ vi ~./bashrc
+    
+    \#BOOST environment
+    BOOST_INCLUDE=/export/files/boost-1.50/include/
+    BOOST_LIB=/export/files/boost-1.50/lib
+    export BOOST_INCLUDE BOOST_LIB
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/export/files/gmp-4.3.2/lib/:/export/files/mpfr-2.4.2/lib/:/export/files/mpc-0.8.1/lib/
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/export/files/gcc-4.6.3/lib64
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BOOST_INCLUDE:$BOOST_LIB
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/export/huzhiguang/files/libmemcached-1.0.10/lib
+    export PATH=$BOOST_INCLUDE:$BOOST_LIB:$PATH
+    
+    \#gcc environment
+    export PATH=/export/files/gcc-4.6.3/bin:$PATH
+    export CMAKE_PREFIX_PATH=/export/dev_hhvm/usr/
+    export HPHP_HOME=/export/dev_hhvm/hiphop-php_20121224_stable
+    export HPHP_LIB=$HPHP_HOME/bin
+    export USE_HHVM=1
+
+save ~./bashrc
+
+execute : source ~./bashrc
+update environment
+
+#install hhvm:
+    mkdir /export/dev_hhvm
+    git clone https://github.com/huzhiguang/hiphop-php_20121224_stable.git
+    cd hiphop-php_20121224_stable
+    cd support_package
+    tar zxvf usr.tar.gz
+    mv usr /export/dev_hhvm
+    cd /export/dev_hhvm/hiphop-php_20121224_stable
+    mkdir build
+    cmake ..
+    make -j 8
+
+test $HPHP_HOME/build/src/hhvm/hhvm 
+
+#edit extension so and include path:
+PATH must /export/dev_hhvm,beacause extension link in CMake/HPHPFindLibs.cmake:
+
+    #mongodb
+	include_directories(/export/dev_hhvm/usr/include)
+	target_link_libraries(${target} /export/dev_hhvm/usr/lib/mongodb_c_liulei/libmongoc.so)
+
+	#ICE
+    #include_directories(/export/huzhiguang/files/Ice-3.4.1/include)
+	include_directories(/export/dev_hhvm/usr/include/freetds_wh)
+	include_directories(/export/dev_hhvm/usr/include/Ice)
+
+	target_link_libraries(${target} /export/dev_hhvm/usr/lib/Ice/libIce.so)	
+	target_link_libraries(${target} /export/dev_hhvm/usr/lib/Ice/libIceUtil.so)		
+
+	target_link_libraries(${target} /export/dev_hhvm/usr/lib/freetds_wh/libsybdb.so)
+	target_link_libraries(${target} /export/dev_hhvm/usr/lib/fastlz/fastlz.o)
+	
+	you can edit this PATH,but edit the above path.
+	
+	if you want to use mssql,you should set freetds lib path.
+	if your freetds path is /usr/local/freetds/ ,you can set freetds lib is :
+	echo /usr/local/freetds/lib >>/etc/ld.so.conf.d/hhvm.conf
+	ldconfig
+	
+	You can see hhvm ld,please execute:
+	ldd $HPHP_HOME/build/src/hhvm/hhvm |grep libsybdb.so.5 ,you can see freetds path
+
+=======================================================================================================================
+hiphop 20121224 old readme content:
 # HipHop for PHP
 
 HipHop is a high performance PHP toolchain. Currently supported platforms are Linux and FreeBSD. There is no OS X support.
